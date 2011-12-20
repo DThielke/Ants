@@ -9,7 +9,7 @@ public class StandardAnt implements Ant {
     private Zone zone;
     private Location location;
 
-    private int maxAnts = 10;
+    private int maxAnts = 100;
     private double dropDecay = 0.001;
     private double threshold = .01;
     private double wanderProbability = 0.1;
@@ -99,19 +99,6 @@ public class StandardAnt implements Ant {
         }
     }
 
-    private Zone selectRandom() {
-        Zone zone;
-        do {
-            int x = location.getX();
-            int y = location.getY();
-            double direction = this.direction + random.nextInt(8) * Math.PI / 4;
-            int dx = (int) Math.signum(Math.round(Math.cos(direction) * 100000));
-            int dy = (int) Math.signum(Math.round(Math.sin(direction) * 100000));
-            zone = world.getZone(x + dx, y + dy);
-        } while (zone == null || !zone.isTraversable());
-        return zone;
-    }
-
     private Zone selectFromAngularRange(int start, int stop) {
         int x = location.getX();
         int y = location.getY();
@@ -153,6 +140,25 @@ public class StandardAnt implements Ant {
             return zones[maxIndex];
 
         return null;
+    }
+
+    private Zone selectRandom() {
+        Zone zone;
+        boolean front = true;
+        do {
+            int x = location.getX();
+            int y = location.getY();
+            double direction;
+            if (front)
+                direction = this.direction + (random.nextInt(3) - 1) * Math.PI / 4;
+            else
+                direction = this.direction + random.nextInt(8) * Math.PI / 4;
+            int dx = (int) Math.signum(Math.round(Math.cos(direction) * 100000));
+            int dy = (int) Math.signum(Math.round(Math.sin(direction) * 100000));
+            zone = world.getZone(x + dx, y + dy);
+            front = false;
+        } while (zone == null || !zone.isTraversable());
+        return zone;
     }
 
     private void depositPheromone(Zone zone) {
