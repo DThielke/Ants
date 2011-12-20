@@ -1,6 +1,6 @@
 public class AntSim extends Thread {
     private static final double pheromoneDecay = 0.001;
-    private static final double diffusion = 0.001;
+    private static final double diffusion = 0.002;
     private static final int FPS = 500;
     private boolean running = false;
     private World world;
@@ -28,20 +28,27 @@ public class AntSim extends Thread {
 
             Location nestCenter = new Location(width / 10, height / 10);
             Location foodCenter = new Location(width * 9 / 10, height * 9 / 10);
-            //Location foodCenter2 = new Location(width / 10, height * 9 / 10);
             int poiSize = 5;
+
+            double str = 1.0;
+            for (int y = height / 10; y <= height * 9 / 10; y++) {
+                world.getZone(width / 10, y).setPheromoneLevel(PheromoneType.FOOD, str);
+                str *= 0.99;
+            }
+
+            for (int x = width / 10; x <= width * 9 / 10; x++) {
+                world.getZone(x, height * 9 / 10).setPheromoneLevel(PheromoneType.FOOD, str);
+                str *= 0.99;
+            }
 
             for (int x = -poiSize / 2; x <= poiSize / 2; x++) {
                 for (int y = -poiSize / 2; y <= poiSize / 2; y++) {
                     Location nestLoc = new Location(nestCenter.getX() + x, nestCenter.getY() + y);
                     Location foodLoc = new Location(foodCenter.getX() + x, foodCenter.getY() + y);
-                    //Location foodLoc2 = new Location(foodCenter2.getX() + x, foodCenter2.getY() + y);
                     Nest nest = new StandardNest(nestLoc, 0);
                     FoodSource food = new FiniteFoodSource(foodLoc, 1000);
-                    //FoodSource food2 = new FiniteFoodSource(foodLoc2, 10);
                     world.setZone(nestLoc, nest);
                     world.setZone(foodLoc, food);
-                    //world.setZone(foodLoc2, food2);
                 }
             }
 
@@ -73,7 +80,7 @@ public class AntSim extends Thread {
                 world.setZone(wallLoc, wall);
             }
 
-            for (int i = 0; i < 500; i++) {
+            for (int i = 0; i < 50; i++) {
                 Ant ant = new StandardAnt(world, nestCenter);
                 world.addAnt(ant);
             }
