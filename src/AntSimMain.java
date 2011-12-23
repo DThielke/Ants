@@ -7,8 +7,8 @@ public class AntSimMain {
     private JFrame frame;
     private final int width = 1000;
     private final int height = 1000;
-    private final int worldWidth = 100;
-    private final int worldHeight = 100;
+    private final int worldWidth = 200;
+    private final int worldHeight = 200;
     private AntSimRenderer renderer;
     private AntSim sim;
 
@@ -17,7 +17,7 @@ public class AntSimMain {
         sim = new AntSim(worldWidth, worldHeight);
         int cellWidth = width / worldWidth;
         int cellHeight = height / worldHeight;
-        
+
         // JFrame
         frame = new JFrame();
         frame.addWindowListener(new FrameClose());

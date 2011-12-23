@@ -54,6 +54,7 @@ public class EmptyZone implements Zone {
 
     @Override
     public void setPheromoneLevel(PheromoneType type, double level) {
-        pheromones.put(type, level > 1 ? 1 : level < 0 ? 0 : level);
+        pheromones.put(type, level < 0 ? 0 : level);
+        //pheromones.put(type, level > 1 ? 1 : level < 0 ? 0 : level);
     }
 }

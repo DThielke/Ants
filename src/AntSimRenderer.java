@@ -13,7 +13,6 @@ public class AntSimRenderer extends Thread {
     private final int width, height;
     private final World world;
     private final int cellWidth, cellHeight;
-    private static final boolean renderText = false;
 
     static {
         pheromoneColors = new EnumMap<PheromoneType, Color>(PheromoneType.class);
@@ -122,17 +121,6 @@ public class AntSimRenderer extends Thread {
                     }
                     g.setColor(new Color(red, green, blue));
                     g.fillRect(x * cellWidth, (wHeight - y) * cellHeight, cellWidth, cellHeight);
-
-                    if (renderText) {
-                        g.setColor(Color.WHITE);
-                        for (PheromoneType type : PheromoneType.values()) {
-                            double level = zone.getPheromoneLevel(type);
-                            if (type == PheromoneType.FOOD)
-                                g.drawString("F " + (int) (level * 100), x * cellWidth + 5, (wHeight - y) * cellHeight + 10);
-                            else
-                                g.drawString("N " + (int) (level * 100), x * cellWidth + 5, (wHeight - y) * cellHeight + 30);
-                        }
-                    }
                 }
             }
         }
