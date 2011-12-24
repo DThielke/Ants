@@ -2,10 +2,11 @@ import java.util.Random;
 
 public class AntSim extends Thread {
     public static final Random random = new Random(System.currentTimeMillis());
-    private static final double pheromoneDecay = 0.0001;
-    private static final double diffusion = 0.0001;
+    private static final double pheromoneDecay = 0.0005;
+    private static final double diffusion = 0.001;
     private static final int FPS = 500;
     private boolean running = false;
+    private boolean paused = true;
     private World world;
 
     public AntSim(int width, int height) {
@@ -64,6 +65,14 @@ public class AntSim extends Thread {
         return world;
     }
 
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
     public boolean isRunning() {
         return running;
     }
@@ -79,7 +88,6 @@ public class AntSim extends Thread {
         long c = 0;
         while (running) {
             long renderStart = System.nanoTime();
-
             if (c == 1000) {
                 long t1 = System.currentTimeMillis();
                 System.out.println("FPS: " + (1000 / ((t1 - t0) / 1000.0)));
@@ -89,21 +97,23 @@ public class AntSim extends Thread {
                 c++;
             }
 
-            // move the ants
-            for (Ant ant : world.getAnts()) {
-                ant.step();
-            }
+            if (!paused) {
+                // move the ants
+                for (Ant ant : world.getAnts()) {
+                    ant.step();
+                }
 
-            // diffuse pheromones
-            world.diffusePheromones(diffusion);
+                // diffuse pheromones
+                world.diffusePheromones(diffusion);
 
-            // evaporate pheromones
-            for (int x = 0; x < world.getWidth(); x++) {
-                for (int y = 0; y < world.getHeight(); y++) {
-                    Zone zone = world.getZone(new Location(x, y));
-                    for (PheromoneType type : PheromoneType.values()) {
-                        double level = zone.getPheromoneLevel(type);
-                        zone.setPheromoneLevel(type, level - pheromoneDecay);
+                // evaporate pheromones
+                for (int x = 0; x < world.getWidth(); x++) {
+                    for (int y = 0; y < world.getHeight(); y++) {
+                        Zone zone = world.getZone(new Location(x, y));
+                        for (PheromoneType type : PheromoneType.values()) {
+                            double level = zone.getPheromoneLevel(type);
+                            zone.setPheromoneLevel(type, level - pheromoneDecay);
+                        }
                     }
                 }
             }

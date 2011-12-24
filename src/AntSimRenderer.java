@@ -34,6 +34,12 @@ public class AntSimRenderer extends Thread {
         } while (strategy == null);
     }
 
+    public Point getCellPoint(Point point) {
+        if (point.x < 0 || point.x > (width - 1) || point.y < 0 || point.y > (height - 1))
+            return null;
+        return new Point(point.x / cellWidth, (height - point.y) / cellHeight);
+    }
+
     // create a hardware accelerated image
     public final BufferedImage create(final int width, final int height, final boolean alpha) {
         return canvas.getGraphicsConfiguration().createCompatibleImage(width, height, alpha ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
@@ -111,7 +117,7 @@ public class AntSimRenderer extends Thread {
                 } else {
                     int red = 0, green = 0, blue = 0;
                     for (PheromoneType type : PheromoneType.values()) {
-                        double level = zone.getPheromoneLevel(type);
+                        double level = Math.min(1.0, zone.getPheromoneLevel(type) / 1);
                         if (level > 0) {
                             Color color = pheromoneColors.get(type);
                             red += color.getRed() * level;

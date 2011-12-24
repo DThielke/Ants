@@ -1,14 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 public class AntSimMain {
     private JFrame frame;
     private final int width = 1000;
     private final int height = 1000;
-    private final int worldWidth = 200;
-    private final int worldHeight = 200;
+    private final int worldWidth = 100;
+    private final int worldHeight = 100;
     private AntSimRenderer renderer;
     private AntSim sim;
 
@@ -32,6 +31,54 @@ public class AntSimMain {
         Canvas canvas = new Canvas(config);
         canvas.setSize(width, height);
         frame.add(canvas, 0);
+        canvas.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point cellPoint = renderer.getCellPoint(e.getPoint());
+                if (cellPoint != null) {
+                    Location location = new Location(cellPoint.x, cellPoint.y);
+                    sim.getWorld().setZone(location, new Wall(location));
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+            }
+        });
+        canvas.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    if (sim.isPaused()) {
+                        sim.setPaused(false);
+                    } else {
+                        sim.setPaused(true);
+                    }
+                } else if (e.getButton() == MouseEvent.BUTTON1) {
+                    Point cellPoint = renderer.getCellPoint(e.getPoint());
+                    System.out.println(cellPoint);
+                    Location location = new Location(cellPoint.x, cellPoint.y);
+                    sim.getWorld().setZone(location, new Wall(location));
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
 
         // Renderer
         renderer = new AntSimRenderer(canvas, width, height, sim.getWorld());

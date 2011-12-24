@@ -146,6 +146,7 @@ public abstract class StandardAnt implements Ant {
         double deposit = Math.max(0, max - level);
 
         // add the calculated amount of pheromones minus a constant
-        zone.setPheromoneLevel(type, level + deposit - pheromoneDecay);
+        zone.setPheromoneLevel(type, Math.max(level, level + deposit - pheromoneDecay));
+        //zone.setPheromoneLevel(type, level + pheromoneDecay);
     }
 }
