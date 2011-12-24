@@ -27,34 +27,6 @@ public class AntSim extends Thread {
             }
         }
 
-        Location wallCenter = new Location(width / 2, height / 2);
-        for (int i = -30; i <= 30; i++) {
-            Location wallLoc = new Location(wallCenter.getX() + i, wallCenter.getY());
-            Wall wall = new Wall(wallLoc);
-            world.setZone(wallLoc, wall);
-        }
-
-        Location wallLeft = new Location(0, height / 2);
-        for (int i = 0; i <= 15; i++) {
-            Location wallLoc = new Location(wallLeft.getX() + i, wallLeft.getY());
-            Wall wall = new Wall(wallLoc);
-            world.setZone(wallLoc, wall);
-        }
-
-        Location wallRight = new Location(width - 1, height / 2 + height / 5);
-        for (int i = -30; i <= 0; i++) {
-            Location wallLoc = new Location(wallRight.getX() + i, wallRight.getY());
-            Wall wall = new Wall(wallLoc);
-            world.setZone(wallLoc, wall);
-        }
-
-        Location wallCenter2 = new Location(width / 2 - width / 5, height / 2 + height / 5);
-        for (int i = -15; i <= 15; i++) {
-            Location wallLoc = new Location(wallCenter2.getX() + i, wallCenter2.getY());
-            Wall wall = new Wall(wallLoc);
-            world.setZone(wallLoc, wall);
-        }
-
         for (int i = 0; i < 50; i++) {
             Ant ant = new GreedyAnt(world, nestCenter, 0.001, 0.10, 100, 0.001);
             world.addAnt(ant);
