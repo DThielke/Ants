@@ -1,3 +1,5 @@
+package com.dthielke.ants;
+
 public class StandardNest extends EmptyZone implements Nest {
     private final Location location;
     private int food;

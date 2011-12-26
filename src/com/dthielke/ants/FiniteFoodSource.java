@@ -1,4 +1,6 @@
-public class FiniteFoodSource extends EmptyZone implements FoodSource{
+package com.dthielke.ants;
+
+public class FiniteFoodSource extends EmptyZone implements FoodSource {
     private int food;
 
     public FiniteFoodSource(Location location, int food) {

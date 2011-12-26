@@ -1,3 +1,5 @@
+package com.dthielke.ants;
+
 public class Location {
     private int x, y;
 

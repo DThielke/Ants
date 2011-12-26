@@ -1,6 +1,6 @@
+package com.dthielke.ants;
+
 public class StochasticAnt extends StandardAnt {
-    private int crowdThreshold;
-    private double pheromoneThreshold;
     private double alpha;
     private double beta;
 
@@ -9,12 +9,10 @@ public class StochasticAnt extends StandardAnt {
                          double pheromoneDecay,
                          double wanderProbability,
                          int crowdThreshold,
-                         double pheromoneThreshold,
+                         double detectionThreshold,
                          double pheromoneFactor,
                          double distanceFactor) {
-        super(world, location, pheromoneDecay, wanderProbability);
-        this.crowdThreshold = crowdThreshold;
-        this.pheromoneThreshold = pheromoneThreshold;
+        super(world, location, pheromoneDecay, wanderProbability, crowdThreshold, detectionThreshold);
         this.alpha = pheromoneFactor;
         this.beta = distanceFactor;
     }
@@ -43,12 +41,12 @@ public class StochasticAnt extends StandardAnt {
             // get the zone at the destination
             zones[i - start] = this.getWorld().getZone(x + dx, y + dy);
             // make sure the zone exists, isn't crowded, and is traversable
-            if (zones[i - start] != null && zones[i - start].getAnts().size() <= crowdThreshold && zones[i - start].isTraversable()) {
+            if (zones[i - start] != null && zones[i - start].getAnts().size() <= getCrowdThreshold() && zones[i - start].isTraversable()) {
                 // calculate and store the probabilities
                 double attractiveness = (direction / Math.PI * 4) % 2 == 0 ? 1 : 0.70710678118654752440084436;
                 double level = zones[i - start].getPheromoneLevel(type);
                 // ignore anything below our threshold
-                if (level < pheromoneThreshold)
+                if (level < getDetectionThreshold())
                     level = 0;
                 probabilities[i - start] = Math.pow(level, alpha) * Math.pow(attractiveness, beta);
                 sum += probabilities[i - start];

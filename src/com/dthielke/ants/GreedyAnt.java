@@ -1,16 +1,14 @@
+package com.dthielke.ants;
+
 public class GreedyAnt extends StandardAnt {
-    private int crowdThreshold;
-    private double pheromoneThreshold;
 
     public GreedyAnt(World world,
                      Location location,
                      double pheromoneDecay,
                      double wanderProbability,
                      int crowdThreshold,
-                     double pheromoneThreshold) {
-        super(world, location, pheromoneDecay, wanderProbability);
-        this.crowdThreshold = crowdThreshold;
-        this.pheromoneThreshold = pheromoneThreshold;
+                     double detectionThreshold) {
+        super(world, location, pheromoneDecay, wanderProbability, crowdThreshold, detectionThreshold);
     }
 
     @Override
@@ -36,11 +34,11 @@ public class GreedyAnt extends StandardAnt {
             // get the zone at the destination
             zones[i - start] = this.getWorld().getZone(x + dx, y + dy);
             // make sure the zone exists, isn't crowded, and is traversable
-            if (zones[i - start] != null && zones[i - start].getAnts().size() <= crowdThreshold && zones[i - start].isTraversable()) {
+            if (zones[i - start] != null && zones[i - start].getAnts().size() <= getCrowdThreshold() && zones[i - start].isTraversable()) {
                 // store the zone's pheromone level
                 levels[i - start] = zones[i - start].getPheromoneLevel(type);
                 // ignore anything below our threshold
-                if (levels[i - start] < pheromoneThreshold)
+                if (levels[i - start] < getDetectionThreshold())
                     levels[i - start] = 0;
             }
         }

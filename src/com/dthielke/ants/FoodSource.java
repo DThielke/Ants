@@ -1,3 +1,5 @@
+package com.dthielke.ants;
+
 public interface FoodSource extends Zone {
     public int getFood();
 

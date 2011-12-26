@@ -1,16 +1,22 @@
+package com.dthielke.ants;
+
 public abstract class StandardAnt implements Ant {
     private boolean food = false;
     private double direction;
     private World world;
     private Zone zone;
     private Location location;
-    private double pheromoneDecay;
+    private int crowdThreshold;
+    private double detectionThreshold;
+    private double depositDecay;
     private double wanderProbability;
 
-    public StandardAnt(World world, Location location, double pheromoneDecay, double wanderProbability) {
+    public StandardAnt(World world, Location location, double depositDecay, double wanderProbability, int crowdThreshold, double detectionThreshold) {
         this.world = world;
-        this.pheromoneDecay = pheromoneDecay;
+        this.depositDecay = depositDecay;
         this.wanderProbability = wanderProbability;
+        this.crowdThreshold = crowdThreshold;
+        this.detectionThreshold = detectionThreshold;
         setLocation(location);
         setRandomDirection();
     }
@@ -20,8 +26,38 @@ public abstract class StandardAnt implements Ant {
     }
 
     @Override
+    public int getCrowdThreshold() {
+        return crowdThreshold;
+    }
+
+    @Override
+    public void setCrowdThreshold(int crowdThreshold) {
+        this.crowdThreshold = crowdThreshold;
+    }
+
+    @Override
+    public double getDepositDecay() {
+        return depositDecay;
+    }
+
+    @Override
+    public void setDepositDecay(double depositDecay) {
+        this.depositDecay = depositDecay;
+    }
+
+    @Override
     public PheromoneType getDepositedPheromone() {
         return food ? PheromoneType.FOOD : PheromoneType.NEST;
+    }
+
+    @Override
+    public double getDetectionThreshold() {
+        return detectionThreshold;
+    }
+
+    @Override
+    public void setDetectionThreshold(double detectionThreshold) {
+        this.detectionThreshold = detectionThreshold;
     }
 
     @Override
@@ -56,6 +92,16 @@ public abstract class StandardAnt implements Ant {
     @Override
     public PheromoneType getPursuedPheromone() {
         return food ? PheromoneType.NEST : PheromoneType.FOOD;
+    }
+
+    @Override
+    public double getWanderProbability() {
+        return wanderProbability;
+    }
+
+    @Override
+    public void setWanderProbability(double wanderProbability) {
+        this.wanderProbability = wanderProbability;
     }
 
     @Override
@@ -146,7 +192,7 @@ public abstract class StandardAnt implements Ant {
         double deposit = Math.max(0, max - level);
 
         // add the calculated amount of pheromones minus a constant
-        zone.setPheromoneLevel(type, Math.max(level, level + deposit - pheromoneDecay));
-        //zone.setPheromoneLevel(type, level + pheromoneDecay);
+        zone.setPheromoneLevel(type, Math.max(level, level + deposit - depositDecay));
+        //zone.setPheromoneLevel(type, level + depositDecay);
     }
 }

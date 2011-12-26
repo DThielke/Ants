@@ -1,3 +1,5 @@
+package com.dthielke.ants;
+
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;

@@ -1,3 +1,5 @@
+package com.dthielke.ants;
+
 import java.awt.*;
 
 public class WorldRenderer {

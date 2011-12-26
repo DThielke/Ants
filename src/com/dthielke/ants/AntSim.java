@@ -1,10 +1,16 @@
+package com.dthielke.ants;
+
 import java.util.Random;
 
 public class AntSim extends Thread {
     public static final Random random = new Random(System.currentTimeMillis());
-    private static final double pheromoneDecay = 0.0005;
-    private static final double diffusion = 0.001;
     private static final int FPS = 500;
+    private double evaporation = 0.0005;
+    private double diffusion = 0.001;
+    private double depositDecay = 0.001;
+    private double wanderProbability = 0.25;
+    private int crowdThreshold = 10;
+    private double detectionThreshold = 0.001;
     private boolean running = false;
     private boolean paused = true;
     private World world;
@@ -28,8 +34,72 @@ public class AntSim extends Thread {
         }
 
         for (int i = 0; i < 50; i++) {
-            Ant ant = new GreedyAnt(world, nestCenter, 0.001, 0.10, 100, 0.001);
+            Ant ant = new GreedyAnt(world, nestCenter, depositDecay, wanderProbability, crowdThreshold, detectionThreshold);
             world.addAnt(ant);
+        }
+    }
+
+    public int getCrowdThreshold() {
+        return crowdThreshold;
+    }
+
+    public void setCrowdThreshold(int crowdThreshold) {
+        if (crowdThreshold != this.crowdThreshold) {
+            this.crowdThreshold = crowdThreshold;
+            for (Ant ant : world.getAnts())
+                ant.setCrowdThreshold(crowdThreshold);
+        }
+    }
+
+    public double getDepositDecay() {
+        return depositDecay;
+    }
+
+    public void setDepositDecay(double depositDecay) {
+        if (depositDecay != this.depositDecay) {
+            this.depositDecay = depositDecay;
+            for (Ant ant : world.getAnts())
+                ant.setDepositDecay(depositDecay);
+        }
+    }
+
+    public double getDetectionThreshold() {
+        return detectionThreshold;
+    }
+
+    public void setDetectionThreshold(double detectionThreshold) {
+        if (detectionThreshold != this.detectionThreshold) {
+            this.detectionThreshold = detectionThreshold;
+            for (Ant ant : world.getAnts())
+                ant.setDetectionThreshold(detectionThreshold);
+        }
+    }
+
+    public double getDiffusion() {
+        return diffusion;
+    }
+
+    public void setDiffusion(double diffusion) {
+        this.diffusion = diffusion;
+    }
+
+    public double getEvaporation() {
+        return evaporation;
+    }
+
+    public void setEvaporation(double evaporation) {
+        this.evaporation = evaporation;
+    }
+
+    public double getWanderProbability() {
+        return wanderProbability;
+    }
+
+    public void setWanderProbability(double wanderProbability) {
+        if (wanderProbability != this.wanderProbability) {
+            this.wanderProbability = wanderProbability;
+            for (Ant ant : world.getAnts())
+                ant.setWanderProbability(wanderProbability);
         }
     }
 
@@ -84,7 +154,7 @@ public class AntSim extends Thread {
                         Zone zone = world.getZone(new Location(x, y));
                         for (PheromoneType type : PheromoneType.values()) {
                             double level = zone.getPheromoneLevel(type);
-                            zone.setPheromoneLevel(type, level - pheromoneDecay);
+                            zone.setPheromoneLevel(type, level - evaporation);
                         }
                     }
                 }

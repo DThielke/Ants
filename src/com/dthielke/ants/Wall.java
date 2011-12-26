@@ -1,3 +1,5 @@
+package com.dthielke.ants;
+
 public class Wall extends EmptyZone {
     public Wall(Location location) {
         super(location);
