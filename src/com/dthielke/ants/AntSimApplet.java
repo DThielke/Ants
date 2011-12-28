@@ -1,14 +1,18 @@
 package com.dthielke.ants;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-public class AntSimMain extends JApplet {
-    private final int width = 800;
-    private final int height = 800;
+public class AntSimApplet extends JApplet {
+    private final int preferredWidth = 600;
+    private final int preferredHeight = 600;
     private final int worldWidth = 100;
     private final int worldHeight = 100;
     private AntSimRenderer renderer;
@@ -19,19 +23,31 @@ public class AntSimMain extends JApplet {
     public void start() {
         // Sim
         sim = new AntSim(worldWidth, worldHeight);
-        int cellWidth = width / worldWidth;
-        int cellHeight = height / worldHeight;
+        int cellWidth = preferredWidth / worldWidth;
+        int cellHeight = preferredHeight / worldHeight;
 
-        // JApplet
-        this.setSize(worldWidth * cellWidth + 6 + 200, worldHeight * cellHeight + 28);
-        this.setLayout(new BorderLayout());
+        // Look and Feel
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
         // Control Panel
-        this.add(new ControlPanel(sim), BorderLayout.WEST);
+        ControlPanel controlPanel = new ControlPanel(sim);
+        controlPanel.setPreferredSize(new Dimension(200, 200));
 
         // Renderer
         renderer = new AntSimRenderer(sim.getWorld());
-        renderer.setSize(width, height);
+        renderer.setSize(new Dimension(cellWidth * worldWidth, cellHeight * worldHeight));
+        renderer.setPreferredSize(new Dimension(cellWidth * worldWidth, cellHeight * worldHeight));
+        renderer.setMaximumSize(new Dimension(cellWidth * worldWidth, cellHeight * worldHeight));
         renderer.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -79,7 +95,17 @@ public class AntSimMain extends JApplet {
             @Override
             public void mouseExited(MouseEvent e) {}
         });
-        this.add(renderer, BorderLayout.CENTER);
+
+        // JApplet
+        JPanel mainPanel = new JPanel();
+        this.add(mainPanel);
+        FormLayout layout = new FormLayout("4dlu, d:g, 4dlu, d:g", "p:g");
+        PanelBuilder builder = new PanelBuilder(layout, mainPanel);
+        CellConstraints cc = new CellConstraints();
+        builder.add(controlPanel, cc.xy(2, 1, CellConstraints.FILL, CellConstraints.FILL));
+        builder.add(renderer, cc.xy(4, 1, CellConstraints.FILL, CellConstraints.FILL));
+
+        this.setSize(controlPanel.getPreferredSize().width + renderer.getPreferredSize().width + 12, controlPanel.getPreferredSize().height + renderer.getPreferredSize().height);
 
         sim.start();
     }

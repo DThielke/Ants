@@ -150,6 +150,7 @@ public abstract class StandardAnt implements Ant {
     protected Zone selectRandomNeighboringZone() {
         Zone zone;
         boolean front = true;
+        int attempts = 0;
         do {
             int x = location.getX();
             int y = location.getY();
@@ -162,7 +163,10 @@ public abstract class StandardAnt implements Ant {
             int dy = (int) Math.signum(Math.round(Math.sin(direction) * 100000));
             zone = world.getZone(x + dx, y + dy);
             front = false;
-        } while (zone == null || !zone.isTraversable());
+            attempts++;
+        } while ((zone == null || !zone.isTraversable()) && attempts < 10);
+        if (zone == null || !zone.isTraversable())
+            return null;
         return zone;
     }
 
@@ -193,6 +197,5 @@ public abstract class StandardAnt implements Ant {
 
         // add the calculated amount of pheromones minus a constant
         zone.setPheromoneLevel(type, Math.max(level, level + deposit - depositDecay));
-        //zone.setPheromoneLevel(type, level + depositDecay);
     }
 }
