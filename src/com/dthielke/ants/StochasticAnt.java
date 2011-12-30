@@ -4,15 +4,6 @@ public class StochasticAnt extends StandardAnt {
     private double alpha;
     private double beta;
 
-    public StochasticAnt(Ant other) {
-        super(other);
-        if (other instanceof StochasticAnt) {
-            StochasticAnt otherStochastic = (StochasticAnt) other;
-            this.alpha = otherStochastic.alpha;
-            this.beta = otherStochastic.beta;
-        }
-    }
-
     public StochasticAnt(World world,
                          Location location,
                          double pheromoneDecay,

@@ -1,7 +1,6 @@
 package com.dthielke.ants;
 
 public class GreedyAnt extends StandardAnt {
-
     public GreedyAnt(World world,
                      Location location,
                      double pheromoneDecay,

@@ -11,15 +11,6 @@ public abstract class StandardAnt implements Ant {
     private double depositDecay;
     private double wanderProbability;
 
-    public StandardAnt(Ant other) {
-        this.world = other.getWorld();
-        this.location = new Location(other.getLocation().getX(), other.getLocation().getY());
-        this.depositDecay = other.getDepositDecay();
-        this.wanderProbability = other.getWanderProbability();
-        this.crowdThreshold = other.getCrowdThreshold();
-        this.detectionThreshold = other.getDetectionThreshold();
-    }
-
     public StandardAnt(World world, Location location, double depositDecay, double wanderProbability, int crowdThreshold, double detectionThreshold) {
         this.world = world;
         this.depositDecay = depositDecay;
