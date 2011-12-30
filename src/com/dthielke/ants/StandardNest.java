@@ -48,7 +48,7 @@ public class StandardNest extends EmptyZone implements Nest {
         if (ant.hasFood()) {
             ant.setFood(false);
             ant.setDirection(ant.getDirection() - Math.PI);
-            food++;
+            setFood(food + 1);
         }
     }
 }

@@ -88,6 +88,19 @@ public class StandardWorld implements World {
     }
 
     @Override
+    public void evaporatePheromones(double evaporation) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Zone zone = zones[x][y];
+                for (PheromoneType type : PheromoneType.values()) {
+                    double level = zone.getPheromoneLevel(type);
+                    zone.setPheromoneLevel(type, level - evaporation);
+                }
+            }
+        }
+    }
+
+    @Override
     public void diffusePheromones(double delta) {
         Zone diffuseTo[] = new Zone[8];
         for (PheromoneType type : PheromoneType.values()) {

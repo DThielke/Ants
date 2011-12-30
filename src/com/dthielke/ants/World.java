@@ -26,4 +26,6 @@ public interface World {
     public void setZone(int x, int y, Zone zone);
 
     public void diffusePheromones(double delta);
+
+    public void evaporatePheromones(double evaporation);
 }

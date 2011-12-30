@@ -80,7 +80,7 @@ public class AntSimRenderer extends JPanel {
         }
 
         // ants
-        for (Ant ant : world.getAnts()) {
+        for (Ant ant : world.getAnts().toArray(new Ant[world.getAnts().size()])) {
             if (ant.hasFood())
                 g2d.setColor(Color.GREEN);
             else
@@ -106,6 +106,10 @@ public class AntSimRenderer extends JPanel {
             food += nest.getFood();
         g2d.setColor(Color.WHITE);
         g2d.drawString("Collected " + food + " food.", 10, 65);
+
+        // ant count
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("There are " + world.getAnts().size() + " ants.", 10, 80);
     }
 
     class RenderThread extends Thread {

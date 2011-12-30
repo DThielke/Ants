@@ -7,6 +7,7 @@ public class AntSim extends Thread {
     private static final int FPS = 500;
     private double evaporation = 0.0005;
     private double diffusion = 0.001;
+    private int antProductionCost = 10;
     private double depositDecay = 0.001;
     private double wanderProbability = 0.25;
     private int crowdThreshold = 10;
@@ -22,11 +23,13 @@ public class AntSim extends Thread {
         Location foodCenter = new Location(width * 9 / 10, height * 9 / 10);
         int poiSize = 5;
 
+        AntFactory factory = new GreedyAntFactory(world, nestCenter, depositDecay, wanderProbability, crowdThreshold, detectionThreshold);
+
         for (int x = -poiSize / 2; x <= poiSize / 2; x++) {
             for (int y = -poiSize / 2; y <= poiSize / 2; y++) {
                 Location nestLoc = new Location(nestCenter.getX() + x, nestCenter.getY() + y);
                 Location foodLoc = new Location(foodCenter.getX() + x, foodCenter.getY() + y);
-                Nest nest = new StandardNest(nestLoc, 0);
+                Nest nest = new AntProducingNest(world, nestLoc, 0, antProductionCost, factory);
                 FoodSource food = new FiniteFoodSource(foodLoc, 1000);
                 world.setZone(nestLoc, nest);
                 world.setZone(foodLoc, food);
@@ -141,7 +144,7 @@ public class AntSim extends Thread {
 
             if (!paused) {
                 // move the ants
-                for (Ant ant : world.getAnts()) {
+                for (Ant ant : world.getAnts().toArray(new Ant[world.getAnts().size()])) {
                     ant.step();
                 }
 
@@ -149,15 +152,7 @@ public class AntSim extends Thread {
                 world.diffusePheromones(diffusion);
 
                 // evaporate pheromones
-                for (int x = 0; x < world.getWidth(); x++) {
-                    for (int y = 0; y < world.getHeight(); y++) {
-                        Zone zone = world.getZone(new Location(x, y));
-                        for (PheromoneType type : PheromoneType.values()) {
-                            double level = zone.getPheromoneLevel(type);
-                            zone.setPheromoneLevel(type, level - evaporation);
-                        }
-                    }
-                }
+                world.evaporatePheromones(evaporation);
             }
 
             // limit FPS
